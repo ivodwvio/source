@@ -7,6 +7,7 @@
 #define Y_SIZE 10
 
 void init_window();
+
 void set_window_size(int width, int height);
 void set_buffer_size(int width, int height);
 void gotoxy(int x, int y);
@@ -53,14 +54,13 @@ void set_window_size(int width, int height)
 {
 	CONSOLE_SCREEN_BUFFER_INFO csbiInfo;
 	SMALL_RECT srctWindow;
-	HANDLE hStdOutput;
 
-	hStdOutput = GetStdHandle(STD_OUTPUT_HANDLE);
-	GetConsoleScreenBufferInfo(hStdOutput, &csbiInfo);
-	srctWindow = csbiInfo.srWindow;
+	srctWindow.Left = 0;
+	srctWindow.Top = 0;
 	srctWindow.Bottom = height - 1;
 	srctWindow.Right = width - 1;
-	SetConsoleWindowInfo(hStdOutput, TRUE, &srctWindow);
+	
+	SetConsoleWindowInfo(GetStdHandle(STD_OUTPUT_HANDLE), TRUE, &srctWindow);
 }
 
 void set_buffer_size(int width, int height)
