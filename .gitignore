@@ -1,0 +1,9 @@
+Debug/
+ipch/
+enc_temp_folder/
+*.opensdf
+*.sln
+*.suo
+*.sdf
+*.vcxproj
+*.vcxproj.*
