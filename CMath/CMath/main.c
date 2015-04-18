@@ -16,6 +16,7 @@ main()
 	init_matrix(matrix);
 	show_matrix(matrix);
 	fill_matrix(matrix);
+	show_matrix(matrix);
 }
 
 void init_matrix(int matrix[X_SIZE][Y_SIZE])
@@ -39,8 +40,20 @@ void show_matrix(int matrix[X_SIZE][Y_SIZE])
 		}
 		printf("\n");
 	}
+	printf("\n");
 }
 
 void fill_matrix(int matrix[X_SIZE][Y_SIZE])
 {
+	int x, y;
+	int r;
+
+	srand(time(NULL));
+
+	for (y = 0; y < Y_SIZE; y++) {
+		for (x = 0; x < X_SIZE; x++) {
+			r = rand() % 10;
+			matrix[x][y] = r;
+		}
+	}
 }
