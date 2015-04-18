@@ -2,6 +2,8 @@
 #include <time.h>
 #include <stdlib.h>
 #include <Windows.h>
+#include <string.h>
+#include <conio.h>
 
 #define X_SIZE 80
 #define Y_SIZE 29
@@ -21,13 +23,29 @@ void fill_matrix(int matrix[X_SIZE][Y_SIZE]);
 main()
 {
 	int matrix[X_SIZE][Y_SIZE];
+	int ch;
+	unsigned char running;
 
 	init_window();
 
 	fill_matrix(matrix);
 	show_matrix(matrix);
 
-	system("pause>nul");
+	running = 1;
+	while (running) {
+		while (!kbhit()) {
+		}
+
+		ch = getch();
+		if (ch == 13) {
+			/* enter key */
+		} else if (ch == 27) {
+			/* escape key */
+			running = 0;
+		} else {
+			/* other */
+		}
+	}
 }
 
 void init_window()
