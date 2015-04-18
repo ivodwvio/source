@@ -3,8 +3,8 @@
 #include <stdlib.h>
 #include <Windows.h>
 
-#define X_SIZE 20
-#define Y_SIZE 10
+#define X_SIZE 80
+#define Y_SIZE 29
 
 void init_window();
 
@@ -18,30 +18,16 @@ void init_matrix(int matrix[X_SIZE][Y_SIZE]);
 void show_matrix(int matrix[X_SIZE][Y_SIZE]);
 void fill_matrix(int matrix[X_SIZE][Y_SIZE]);
 
-void test();
-
 main()
 {
 	int matrix[X_SIZE][Y_SIZE];
 
 	init_window();
 
-	init_matrix(matrix);
-	show_matrix(matrix);
 	fill_matrix(matrix);
 	show_matrix(matrix);
 
-	test();
-}
-
-void test()
-{
-	int i;
-
-	for (i = 0; i < 259; i++) {
-		set_color(i);
-		printf("1");
-	}
+	system("pause>nul");
 }
 
 void init_window()
@@ -123,12 +109,10 @@ void show_matrix(int matrix[X_SIZE][Y_SIZE])
 
 	for (y = 0; y < Y_SIZE; y++) {
 		for (x = 0; x < X_SIZE; x++) {
-			set_color(matrix[x][y] + 6);
+			gotoxy(x, y);
 			printf("%d", matrix[x][y]);
 		}
-		printf("\n");
 	}
-	printf("\n");
 }
 
 void fill_matrix(int matrix[X_SIZE][Y_SIZE])
