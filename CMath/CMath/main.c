@@ -1,26 +1,46 @@
 #include <stdio.h>
+#include <time.h>
+#include <stdlib.h>
+
+#define X_SIZE 20
+#define Y_SIZE 10
+
+void init_matrix(int matrix[X_SIZE][Y_SIZE]);
+void show_matrix(int matrix[X_SIZE][Y_SIZE]);
+void fill_matrix(int matrix[X_SIZE][Y_SIZE]);
 
 main()
 {
-	int i;
+	int matrix[X_SIZE][Y_SIZE];
 
-	printf("The numbers from 0 to 100:\n");
-	for (i = 0; i <= 100; i++)
-		if (i == 0)
-			printf(" %d", i);
-		else if (i % 10 == 0)
-			printf(" %d\n", i);
-		else printf(" %d", i);
-	printf("\n");
+	init_matrix(matrix);
+	show_matrix(matrix);
+	fill_matrix(matrix);
+}
 
-	printf("All numbers we represent using the 10 numbers:\n");
-	for (i = 0; i < 10; i++)
-		printf(" %d", i);
-	printf("\n\n");
+void init_matrix(int matrix[X_SIZE][Y_SIZE])
+{
+	int x, y;
 
-	printf("Two digit number = 10*a+b or ab.\n");
-	printf("97=10*9+7\n");
-	printf("45=10*4+5\n");
-	printf("23=10*2+3\n");
-	printf("\n");
+	for (y = 0; y < Y_SIZE; y++) {
+		for (x = 0; x < X_SIZE; x++) {
+			matrix[x][y] = 0;
+		}
+	}
+}
+
+void show_matrix(int matrix[X_SIZE][Y_SIZE])
+{
+	int x, y;
+
+	for (y = 0; y < Y_SIZE; y++) {
+		for (x = 0; x < X_SIZE; x++) {
+			printf("%d", matrix[x][y]);
+		}
+		printf("\n");
+	}
+}
+
+void fill_matrix(int matrix[X_SIZE][Y_SIZE])
+{
 }
