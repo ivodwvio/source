@@ -14,12 +14,12 @@ typedef unsigned char bool;
 #define WINDOW_WIDTH 80
 #define WINDOW_HEIGHT 30
 
-#define X_SIZE 80
-#define Y_SIZE 29
+#define MATRIX_X_SIZE 80
+#define MATRIX_Y_SIZE 29
 
-#define ENTER 13
-#define ESCAPE 27
-#define BACKSPACE 8
+#define KEY_ENTER 13
+#define KEY_ESCAPE 27
+#define KEY_BACKSPACE 8
 #define KEY_UP 72
 #define KEY_DOWN 80
 #define KEY_LEFT 75
@@ -37,8 +37,8 @@ bool IsValidPosition(int x, int y);
 void WhereXY(int *x, int *y);
 void SetColor(long color);
 
-void FillMatrix(Element matrix[X_SIZE][Y_SIZE]);
-void ShowMatrix(Element matrix[X_SIZE][Y_SIZE]);
+void FillMatrix(Element matrix[MATRIX_X_SIZE][MATRIX_Y_SIZE]);
+void ShowMatrix(Element matrix[MATRIX_X_SIZE][MATRIX_Y_SIZE]);
 
 void InitWindow();
 void KeyInput(int ch);
@@ -55,7 +55,7 @@ void OnDefault();
 
 bool MoveCursor(int x, int y);
 
-Element matrix[X_SIZE][Y_SIZE];
+Element matrix[MATRIX_X_SIZE][MATRIX_Y_SIZE];
 bool running;
 int ch;
 
@@ -131,13 +131,13 @@ void OnDefault()
 void KeyInput(int ch)
 {
 	switch (ch) {
-		case ENTER:
+		case KEY_ENTER:
 			OnEnter();
 			break;
-		case ESCAPE:
+		case KEY_ESCAPE:
 			OnEscape();
 			break;
-		case BACKSPACE:
+		case KEY_BACKSPACE:
 			OnBackspace();
 			break;
 		case KEY_UP:
@@ -230,7 +230,7 @@ void SetColor(long color)
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
 }
 
-void FillMatrix(Element matrix[X_SIZE][Y_SIZE])
+void FillMatrix(Element matrix[MATRIX_X_SIZE][MATRIX_Y_SIZE])
 {
 	int x, y;
 	int color;
@@ -248,7 +248,7 @@ void FillMatrix(Element matrix[X_SIZE][Y_SIZE])
 	}
 }
 
-void ShowMatrix(Element matrix[X_SIZE][Y_SIZE])
+void ShowMatrix(Element matrix[MATRIX_X_SIZE][MATRIX_Y_SIZE])
 {
 	int x, y;
 
