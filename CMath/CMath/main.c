@@ -26,8 +26,7 @@ typedef unsigned char bool;
 #define KEY_RIGHT 77
 
 typedef struct _Element {
-	int colorID;
-	int spriteID;
+	int id;
 } Element;
 
 void SetWindowSize(int width, int height);
@@ -37,6 +36,7 @@ bool IsValidPosition(int x, int y);
 void WhereXY(int *x, int *y);
 void SetColor(long color);
 
+void InitMatrix(Element matrix[MATRIX_X_SIZE][MATRIX_Y_SIZE]);
 void FillMatrix(Element matrix[MATRIX_X_SIZE][MATRIX_Y_SIZE]);
 void ShowMatrix(Element matrix[MATRIX_X_SIZE][MATRIX_Y_SIZE]);
 
@@ -60,16 +60,26 @@ Element matrix[MATRIX_X_SIZE][MATRIX_Y_SIZE];
 bool running;
 int ch;
 
-char sprites[10] = {'`', '.', ',', '-', '+', '|', '=', '\'', '"'};
-const int SPRITE_SIZE = 10;
+typedef enum {
+	EMPTY_SPACE_ID,
+	WALL_ID,
+	HEARTS_ID,
+	SPADES_ID,
+	DIAMONDS_ID,
+	CLUBS_ID
+};
+#define ELEMENTS_COUNT 6
 
-char colors[10] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-const int COLOR_SIZE = 10;
+char sprites[] = {' ', 219, 3, 6, 4, 5};
+char colors[] = {0, 119, 12, 9, 12, 9};
 
 main()
 {
 	InitWindow();
 
+	InitMatrix(matrix);
+	ShowMatrix(matrix);
+	system("pause>nul");
 	FillMatrix(matrix);
 	ShowMatrix(matrix);
 
@@ -241,6 +251,17 @@ void SetColor(long color)
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
 }
 
+void InitMatrix(Element matrix[MATRIX_X_SIZE][MATRIX_Y_SIZE])
+{
+	int x, y;
+
+	for (x = 0; x < MATRIX_X_SIZE; x++) {
+		for (y = 0; y < MATRIX_Y_SIZE; y++) {
+			matrix[x][y].id = EMPTY_SPACE_ID;
+		}
+	}
+}
+
 void FillMatrix(Element matrix[MATRIX_X_SIZE][MATRIX_Y_SIZE])
 {
 	int x, y;
@@ -251,10 +272,7 @@ void FillMatrix(Element matrix[MATRIX_X_SIZE][MATRIX_Y_SIZE])
 
 	for (y = 0; y < MATRIX_Y_SIZE; y++) {
 		for (x = 0; x < MATRIX_X_SIZE; x++) {
-			colorID = rand() % COLOR_SIZE;
-			spriteID = rand() % SPRITE_SIZE;
-			matrix[x][y].colorID = colorID;
-			matrix[x][y].spriteID = spriteID;
+			matrix[x][y].id = rand() % ELEMENTS_COUNT;
 		}
 	}
 }
@@ -266,8 +284,8 @@ void ShowMatrix(Element matrix[MATRIX_X_SIZE][MATRIX_Y_SIZE])
 	for (y = 0; y < MATRIX_Y_SIZE; y++) {
 		for (x = 0; x < MATRIX_X_SIZE; x++) {
 			GotoXY(x, y);
-			SetColor(colors[matrix[x][y].colorID]);
-			printf("%c", sprites[matrix[x][y].spriteID]);
+			SetColor(colors[matrix[x][y].id]);
+			printf("%c", sprites[matrix[x][y].id]);
 		}
 	}
 }

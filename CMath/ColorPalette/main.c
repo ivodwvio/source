@@ -10,11 +10,11 @@ main()
 	for (i = 0; i < 256; i++) {
 		SetColor(i);
 		if (i == 0)
-			printf("%c ", '&');
+			printf("%d = %c ", i, '&');
 		else if (i % 10 == 0)
 			printf("\n");
 		else
-			printf("%c ", '&');
+			printf("%d = %c ", i, '&');
 	}
 }
 
