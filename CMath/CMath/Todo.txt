@@ -1,1 +1,14 @@
 Craete treeID -> sprites and color ? Objects ?
+'T' 'A' 'O' 'M' 'Z' '>' '<' '^' 'N' '_'
+'t' 'p' 'P'
+
+
+spriteID
+colorID
+
+TREE_COLOR_ID
+TREE_SPRITE_ID
+
+PLAYER1_COLOR_ID
+PLAYER2_COLOR_ID
+...etc

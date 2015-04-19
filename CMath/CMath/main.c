@@ -238,8 +238,8 @@ void FillMatrix(Element matrix[MATRIX_X_SIZE][MATRIX_Y_SIZE])
 
 	srand(time(NULL));
 
-	for (y = 0; y < Y_SIZE; y++) {
-		for (x = 0; x < X_SIZE; x++) {
+	for (y = 0; y < MATRIX_Y_SIZE; y++) {
+		for (x = 0; x < MATRIX_X_SIZE; x++) {
 			color = rand() % 256;
 			spriteID = rand() % SPRITE_SIZE;
 			matrix[x][y].color = color;
@@ -252,8 +252,8 @@ void ShowMatrix(Element matrix[MATRIX_X_SIZE][MATRIX_Y_SIZE])
 {
 	int x, y;
 
-	for (y = 0; y < Y_SIZE; y++) {
-		for (x = 0; x < X_SIZE; x++) {
+	for (y = 0; y < MATRIX_Y_SIZE; y++) {
+		for (x = 0; x < MATRIX_X_SIZE; x++) {
 			GotoXY(x, y);
 			SetColor(matrix[x][y].color);
 			printf("%c", sprites[matrix[x][y].spriteID]);
