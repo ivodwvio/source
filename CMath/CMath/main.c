@@ -5,11 +5,16 @@
 #include <string.h>
 #include <conio.h>
 
+#ifndef __cplusplus__
+typedef unsigned char bool;
+#define true 1
+#define false 0
+#endif
+
 #define X_SIZE 80
 #define Y_SIZE 29
 
 void init_window();
-
 void set_window_size(int width, int height);
 void set_buffer_size(int width, int height);
 void gotoxy(int x, int y);
@@ -23,15 +28,18 @@ void fill_matrix(int matrix[X_SIZE][Y_SIZE]);
 main()
 {
 	int matrix[X_SIZE][Y_SIZE];
+	bool running;
+	char input[80];
+	int len;
 	int ch;
-	unsigned char running;
 
 	init_window();
 
 	fill_matrix(matrix);
 	show_matrix(matrix);
 
-	running = 1;
+	len = 0;
+	running = true;
 	while (running) {
 		while (!kbhit()) {
 		}
@@ -39,11 +47,33 @@ main()
 		ch = getch();
 		if (ch == 13) {
 			/* enter key */
+			input[len] = '\0';
+			if (!strcmp(input, "exit")) {
+				running = false;
+			}
+			for (len = 0; len < 79; len++)
+				input[len] = ' ';
+			input[len] = '\0';
+			gotoxy(0, 29);
+			printf("%s", input);
+			gotoxy(0, 29);
+			strcpy(input, "");
+			len = 0;
 		} else if (ch == 27) {
 			/* escape key */
-			running = 0;
+			running = false;
+		} else if (ch == 8) {
+			/* backspace */
+			printf("\b \b");
+			if (len > 0)
+				len--;
 		} else {
-			/* other */
+			if (len < 79) {
+				if (isalpha(ch)) {
+					input[len++] = ch;
+					printf("%c", (char)ch);
+				}
+			}
 		}
 	}
 }
