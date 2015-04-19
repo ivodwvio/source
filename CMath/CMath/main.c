@@ -25,6 +25,11 @@ typedef unsigned char bool;
 #define KEY_LEFT 75
 #define KEY_RIGHT 77
 
+typedef struct _Element {
+	int color;
+	int spriteID;
+} Element;
+
 void SetWindowSize(int width, int height);
 void SetBufferSize(int width, int height);
 bool GotoXY(int x, int y);
@@ -32,9 +37,8 @@ bool IsValidPosition(int x, int y);
 void WhereXY(int *x, int *y);
 void SetColor(long color);
 
-void InitMatrix(int matrix[X_SIZE][Y_SIZE]);
-void ShowMatrix(int matrix[X_SIZE][Y_SIZE]);
-void FillMatrix(int matrix[X_SIZE][Y_SIZE]);
+void FillMatrix(Element matrix[X_SIZE][Y_SIZE]);
+void ShowMatrix(Element matrix[X_SIZE][Y_SIZE]);
 
 void InitWindow();
 void KeyInput(int ch);
@@ -51,9 +55,12 @@ void OnDefault();
 
 bool MoveCursor(int x, int y);
 
-int matrix[X_SIZE][Y_SIZE];
+Element matrix[X_SIZE][Y_SIZE];
 bool running;
 int ch;
+
+char sprites[10] = {'`', '.', ',', '-', '+', '|', '=', '\'', '"'};
+const int SPRITE_SIZE = 10;
 
 main()
 {
@@ -223,41 +230,33 @@ void SetColor(long color)
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
 }
 
-void InitMatrix(int matrix[X_SIZE][Y_SIZE])
+void FillMatrix(Element matrix[X_SIZE][Y_SIZE])
 {
 	int x, y;
+	int color;
+	char spriteID;
+
+	srand(time(NULL));
 
 	for (y = 0; y < Y_SIZE; y++) {
 		for (x = 0; x < X_SIZE; x++) {
-			matrix[x][y] = 0;
+			color = rand() % 256;
+			spriteID = rand() % SPRITE_SIZE;
+			matrix[x][y].color = color;
+			matrix[x][y].spriteID = spriteID;
 		}
 	}
 }
 
-void ShowMatrix(int matrix[X_SIZE][Y_SIZE])
+void ShowMatrix(Element matrix[X_SIZE][Y_SIZE])
 {
 	int x, y;
 
 	for (y = 0; y < Y_SIZE; y++) {
 		for (x = 0; x < X_SIZE; x++) {
 			GotoXY(x, y);
-			SetColor(matrix[x][y]);
-			printf("%d", matrix[x][y]);
-		}
-	}
-}
-
-void FillMatrix(int matrix[X_SIZE][Y_SIZE])
-{
-	int x, y;
-	int r;
-
-	srand(time(NULL));
-
-	for (y = 0; y < Y_SIZE; y++) {
-		for (x = 0; x < X_SIZE; x++) {
-			r = rand() % 10;
-			matrix[x][y] = r;
+			SetColor(matrix[x][y].color);
+			printf("%c", sprites[matrix[x][y].spriteID]);
 		}
 	}
 }
