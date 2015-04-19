@@ -11,80 +11,153 @@ typedef unsigned char bool;
 #define false 0
 #endif
 
+#define WINDOW_WIDTH 80
+#define WINDOW_HEIGHT 30
+
 #define X_SIZE 80
 #define Y_SIZE 29
 
-void init_window();
-void set_window_size(int width, int height);
-void set_buffer_size(int width, int height);
-void gotoxy(int x, int y);
-void wherexy(int *x, int *y);
-void set_color(long color);
+#define ENTER 13
+#define ESCAPE 27
+#define BACKSPACE 8
+#define KEY_UP 72
+#define KEY_DOWN 80
+#define KEY_LEFT 75
+#define KEY_RIGHT 77
 
-void init_matrix(int matrix[X_SIZE][Y_SIZE]);
-void show_matrix(int matrix[X_SIZE][Y_SIZE]);
-void fill_matrix(int matrix[X_SIZE][Y_SIZE]);
+void SetWindowSize(int width, int height);
+void SetBufferSize(int width, int height);
+bool GotoXY(int x, int y);
+bool IsValidPosition(int x, int y);
+void WhereXY(int *x, int *y);
+void SetColor(long color);
+
+void InitMatrix(int matrix[X_SIZE][Y_SIZE]);
+void ShowMatrix(int matrix[X_SIZE][Y_SIZE]);
+void FillMatrix(int matrix[X_SIZE][Y_SIZE]);
+
+void InitWindow();
+void KeyInput(int ch);
+void Run();
+
+void OnEnter();
+void OnEscape();
+void OnBackspace();
+void OnKeyUp();
+void OnKeyDown();
+void OnKeyLeft();
+void OnKeyRight();
+void OnDefault();
+
+bool MoveCursor(int x, int y);
+
+int matrix[X_SIZE][Y_SIZE];
+bool running;
+int ch;
 
 main()
 {
-	int matrix[X_SIZE][Y_SIZE];
-	bool running;
-	char input[80];
-	int len;
-	int ch;
+	InitWindow();
 
-	init_window();
+	FillMatrix(matrix);
+	ShowMatrix(matrix);
 
-	fill_matrix(matrix);
-	show_matrix(matrix);
+	Run();
+}
 
-	len = 0;
+void Run()
+{
 	running = true;
 	while (running) {
 		while (!kbhit()) {
 		}
-
 		ch = getch();
-		if (ch == 13) {
-			/* enter key */
-			input[len] = '\0';
-			if (!strcmp(input, "exit")) {
-				running = false;
-			}
-			for (len = 0; len < 79; len++)
-				input[len] = ' ';
-			input[len] = '\0';
-			gotoxy(0, 29);
-			printf("%s", input);
-			gotoxy(0, 29);
-			strcpy(input, "");
-			len = 0;
-		} else if (ch == 27) {
-			/* escape key */
-			running = false;
-		} else if (ch == 8) {
-			/* backspace */
-			printf("\b \b");
-			if (len > 0)
-				len--;
-		} else {
-			if (len < 79) {
-				if (isalpha(ch)) {
-					input[len++] = ch;
-					printf("%c", (char)ch);
-				}
-			}
-		}
+		KeyInput(ch);
 	}
 }
 
-void init_window()
+bool MoveCursor(int x, int y)
 {
-	set_buffer_size(80, 30);
-	set_window_size(80, 30);
+	int oldx, oldy;
+
+	WhereXY(&oldx, &oldy);
+	return GotoXY(oldx+x, oldy+y);
 }
 
-void set_window_size(int width, int height)
+void OnEnter()
+{
+}
+
+void OnEscape()
+{
+	running = false;
+}
+
+void OnBackspace()
+{
+}
+
+void OnKeyUp()
+{
+	MoveCursor(0, -1);
+}
+
+void OnKeyDown()
+{
+	MoveCursor(0, 1);
+}
+
+void OnKeyLeft()
+{
+	MoveCursor(-1, 0);
+}
+
+void OnKeyRight()
+{
+	MoveCursor(1, 0);
+}
+
+void OnDefault()
+{
+}
+
+void KeyInput(int ch)
+{
+	switch (ch) {
+		case ENTER:
+			OnEnter();
+			break;
+		case ESCAPE:
+			OnEscape();
+			break;
+		case BACKSPACE:
+			OnBackspace();
+			break;
+		case KEY_UP:
+			OnKeyUp();
+			break;
+		case KEY_DOWN:
+			OnKeyDown();
+			break;
+		case KEY_LEFT:
+			OnKeyLeft();
+			break;
+		case KEY_RIGHT:
+			OnKeyRight();
+			break;
+		default:
+			OnDefault();
+			break;
+	}
+}
+
+void InitWindow()
+{
+	SetBufferSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+	SetWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+}
+
+void SetWindowSize(int width, int height)
 {
 	CONSOLE_SCREEN_BUFFER_INFO csbiInfo;
 	SMALL_RECT srctWindow;
@@ -97,7 +170,7 @@ void set_window_size(int width, int height)
 	SetConsoleWindowInfo(GetStdHandle(STD_OUTPUT_HANDLE), TRUE, &srctWindow);
 }
 
-void set_buffer_size(int width, int height)
+void SetBufferSize(int width, int height)
 {
 	COORD size;
 
@@ -106,7 +179,7 @@ void set_buffer_size(int width, int height)
 	SetConsoleScreenBufferSize(GetStdHandle(STD_OUTPUT_HANDLE), size);
 }
 
-void gotoxy(int x, int y)
+bool GotoXY(int x, int y)
 {
 	CONSOLE_SCREEN_BUFFER_INFO csbi;
 	COORD coord;
@@ -114,19 +187,29 @@ void gotoxy(int x, int y)
 
 	hStdOutput = GetStdHandle(STD_OUTPUT_HANDLE);
 	GetConsoleScreenBufferInfo(hStdOutput, &csbi);
-	if (x < 0 || x > csbi.dwSize.X ||
-		y < 0 || y > csbi.dwSize.Y)
-	{
-		/* out of borders */
-		return;
-	}
+	
+	if (!IsValidPosition(csbi.dwSize.X, csbi.dwSize.Y))
+		return false;
 
 	coord.X = x;
 	coord.Y = y;
 	SetConsoleCursorPosition(hStdOutput, coord);
+	return true;
 }
 
-void wherexy(int *x, int *y)
+bool IsValidPosition(int x, int y)
+{
+	if (x < 0 || x > WINDOW_WIDTH ||
+		y < 0 || y > WINDOW_HEIGHT)
+	{
+		/* out of borders */
+		return false;
+	}
+
+	return true;
+}
+
+void WhereXY(int *x, int *y)
 {
 	CONSOLE_SCREEN_BUFFER_INFO csbi;
 
@@ -135,12 +218,12 @@ void wherexy(int *x, int *y)
 	*y = csbi.dwCursorPosition.Y;
 }
 
-void set_color(long color)
+void SetColor(long color)
 {
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
 }
 
-void init_matrix(int matrix[X_SIZE][Y_SIZE])
+void InitMatrix(int matrix[X_SIZE][Y_SIZE])
 {
 	int x, y;
 
@@ -151,19 +234,20 @@ void init_matrix(int matrix[X_SIZE][Y_SIZE])
 	}
 }
 
-void show_matrix(int matrix[X_SIZE][Y_SIZE])
+void ShowMatrix(int matrix[X_SIZE][Y_SIZE])
 {
 	int x, y;
 
 	for (y = 0; y < Y_SIZE; y++) {
 		for (x = 0; x < X_SIZE; x++) {
-			gotoxy(x, y);
+			GotoXY(x, y);
+			SetColor(matrix[x][y]);
 			printf("%d", matrix[x][y]);
 		}
 	}
 }
 
-void fill_matrix(int matrix[X_SIZE][Y_SIZE])
+void FillMatrix(int matrix[X_SIZE][Y_SIZE])
 {
 	int x, y;
 	int r;
