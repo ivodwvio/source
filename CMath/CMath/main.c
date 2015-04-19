@@ -26,7 +26,7 @@ typedef unsigned char bool;
 #define KEY_RIGHT 77
 
 typedef struct _Element {
-	int color;
+	int colorID;
 	int spriteID;
 } Element;
 
@@ -41,6 +41,7 @@ void FillMatrix(Element matrix[MATRIX_X_SIZE][MATRIX_Y_SIZE]);
 void ShowMatrix(Element matrix[MATRIX_X_SIZE][MATRIX_Y_SIZE]);
 
 void InitWindow();
+void CleanWindow();
 void KeyInput(int ch);
 void Run();
 
@@ -62,6 +63,9 @@ int ch;
 char sprites[10] = {'`', '.', ',', '-', '+', '|', '=', '\'', '"'};
 const int SPRITE_SIZE = 10;
 
+char colors[10] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+const int COLOR_SIZE = 10;
+
 main()
 {
 	InitWindow();
@@ -70,6 +74,8 @@ main()
 	ShowMatrix(matrix);
 
 	Run();
+
+	CleanWindow();
 }
 
 void Run()
@@ -164,6 +170,11 @@ void InitWindow()
 	SetWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 }
 
+void CleanWindow()
+{
+	SetColor(7);
+}
+
 void SetWindowSize(int width, int height)
 {
 	CONSOLE_SCREEN_BUFFER_INFO csbiInfo;
@@ -233,16 +244,16 @@ void SetColor(long color)
 void FillMatrix(Element matrix[MATRIX_X_SIZE][MATRIX_Y_SIZE])
 {
 	int x, y;
-	int color;
+	int colorID;
 	char spriteID;
 
 	srand(time(NULL));
 
 	for (y = 0; y < MATRIX_Y_SIZE; y++) {
 		for (x = 0; x < MATRIX_X_SIZE; x++) {
-			color = rand() % 256;
+			colorID = rand() % COLOR_SIZE;
 			spriteID = rand() % SPRITE_SIZE;
-			matrix[x][y].color = color;
+			matrix[x][y].colorID = colorID;
 			matrix[x][y].spriteID = spriteID;
 		}
 	}
@@ -255,7 +266,7 @@ void ShowMatrix(Element matrix[MATRIX_X_SIZE][MATRIX_Y_SIZE])
 	for (y = 0; y < MATRIX_Y_SIZE; y++) {
 		for (x = 0; x < MATRIX_X_SIZE; x++) {
 			GotoXY(x, y);
-			SetColor(matrix[x][y].color);
+			SetColor(colors[matrix[x][y].colorID]);
 			printf("%c", sprites[matrix[x][y].spriteID]);
 		}
 	}
